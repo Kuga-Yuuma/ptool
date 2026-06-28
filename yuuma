@@ -72,16 +72,15 @@ whiptail --msgbox "SSH теперь только по ключам!" 10 50
 
 }
 
-function about() {
-whiptail --msgbox "Yuuma DevOps Tool \n\nВерсия: 1.0\nАвтор: Yuuma " 12 50
-}
 
 while true; do
 CHOICE=$(whiptail --title "Yuuma Tool" 
 --menu "Действие:" 15 60 6 
 "1" "Подтянуть SSH ключи с GitHub" 
-"2" " Включить авторизацию по ключу" 
-"0" "Выход" 3>&1 1>&2 2>&3)
+"2" "Включить авторизацию по ключу" 
+"0" "Выход" 
+3>&1 1>&2 2>&3)
+
 
 ```
 case $CHOICE in
