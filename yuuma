@@ -81,7 +81,6 @@ CHOICE=$(whiptail --title "Yuuma Tool"
 "0" "Выход" 
 3>&1 1>&2 2>&3)
 
-
 ```
 case $CHOICE in
     1) install_keys ;;
