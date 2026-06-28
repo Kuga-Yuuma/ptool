@@ -15,7 +15,7 @@ apt update -y
 apt install -y whiptail curl openssh-server
 
 echo "Загрузка yuuma..."
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/yuuma.sh -o /usr/local/bin/yuuma
+curl -fsSL https://raw.githubusercontent.com/Kuga-Yuuma/ptool/main/yuuma -o /usr/local/bin/yuuma
 
 chmod +x /usr/local/bin/yuuma
 
