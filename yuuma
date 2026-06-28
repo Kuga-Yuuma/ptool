@@ -86,7 +86,6 @@ CHOICE=$(whiptail --title "Yuuma Tool"
 case $CHOICE in
     1) install_keys ;;
     2) enable_ssh ;;
-    3) about ;;
     0) clear; exit 0 ;;
 esac
 ```
