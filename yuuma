@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# Цвета (для логов)
+
+GREEN="\033[1;32m"
+RED="\033[1;31m"
+BLUE="\033[1;34m"
+NC="\033[0m"
+
+SSH_DIR="$HOME/.ssh"
+AUTHORIZED_KEYS="$SSH_DIR/authorized_keys"
+
+function install_keys() {
+USERNAME=$(whiptail --inputbox "Введите GitHub username" 10 50 3>&1 1>&2 2>&3)
+
+```
+[ -z "$USERNAME" ] && return
+
+{
+    echo 20
+    sleep 0.5
+
+    mkdir -p "$SSH_DIR"
+    chmod 700 "$SSH_DIR"
+
+    echo 50
+    sleep 0.5
+
+    curl -fsSL "https://github.com/$USERNAME.keys" -o "$AUTHORIZED_KEYS"
+
+    if [ $? -ne 0 ] || [ ! -s "$AUTHORIZED_KEYS" ]; then
+        whiptail --msgbox "Ошибка загрузки ключей!" 10 50
+        return
+    fi
+
+    chmod 600 "$AUTHORIZED_KEYS"
+
+    echo 100
+    sleep 0.5
+
+} | whiptail --gauge "Загрузка SSH ключей..." 6 50 0
+
+whiptail --msgbox "Ключи успешно установлены!" 10 50
+```
+
+}
+
+function enable_ssh() {
+SSH_CONFIG="/etc/ssh/sshd_config"
+
+```
+{
+    echo 30
+    sleep 0.5
+
+    sed -i 's/^#\?PubkeyAuthentication.*/PubkeyAuthentication yes/' $SSH_CONFIG
+    sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' $SSH_CONFIG
+    sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin prohibit-password/' $SSH_CONFIG
+
+    echo 70
+    sleep 0.5
+
+    systemctl restart ssh 2>/dev/null || service ssh restart
+
+    echo 100
+    sleep 0.5
+
+} | whiptail --gauge "Настройка SSH..." 6 50 0
+
+whiptail --msgbox "SSH теперь только по ключам!" 10 50
+```
+
+}
+
+function about() {
+whiptail --msgbox "Yuuma DevOps Tool \n\nВерсия: 1.0\nАвтор: Yuuma " 12 50
+}
+
+while true; do
+CHOICE=$(whiptail --title "Yuuma Tool" 
+--menu "Действие:" 15 60 6 
+"1" "Подтянуть SSH ключи с GitHub" 
+"2" " Включить авторизацию по ключу" 
+"0" "Выход" 3>&1 1>&2 2>&3)
+
+```
+case $CHOICE in
+    1) install_keys ;;
+    2) enable_ssh ;;
+    3) about ;;
+    0) clear; exit 0 ;;
+esac
+```
+
+done
